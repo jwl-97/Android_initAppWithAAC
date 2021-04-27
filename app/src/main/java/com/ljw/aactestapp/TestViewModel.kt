@@ -9,9 +9,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import com.ljw.aactestapp.http.Repository
 import com.ljw.aactestapp.util.Event
 
 class TestViewModel : ViewModel() {
+    private val signUpRepository by lazy {
+        Repository()
+    }
+
     private val _showErrorToast = MutableLiveData<Event<String>>()
     private val _openEvent = MutableLiveData<Event<String>>()
 
@@ -36,6 +41,23 @@ class TestViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         Log.d("ljwLog", "onCleared")
+    }
+
+    fun getTestData(id: Int) {
+        signUpRepository.getTestData(
+            id = id,
+            onResponse = { //고차함수로 구현, it으로 response에 바로 접근 가능
+                if (it.isSuccessful) {
+                    Log.d("ljwLog", "it.code() : $it.code()")
+                } else {
+                    Log.e("ljwLog 응답 실패 : ", it.message())
+                }
+            },
+
+            onFailure = { //고차함수로 구현, it으로 t에 바로 접근 가능
+                Log.e("ljwLog", "통신 실패 error : $it")
+            }
+        )
     }
 }
 

@@ -29,5 +29,7 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("text", sampleText)
             startActivity(intent)
         }
+
+        viewModel.getTestData(1)
     }
 }
